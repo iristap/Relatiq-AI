@@ -1,0 +1,10 @@
+langchain
+langchain-google-genai
+langchain-community
+langchain-experimental
+neo4j
+streamlit
+streamlit-agraph
+python-dotenv
+pandas
+plotly

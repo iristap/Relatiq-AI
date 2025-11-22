@@ -1,0 +1,79 @@
+rosoft with an Outperform rating and a $600 price target, highlighting the company’s expansive cloud and AI ecosystem and its ability to sustain double-digit growth at scale.
+
+Analyst William Power said Microsoft is “leading the AI revolution” through its infrastructure, applications and partnership with OpenAI, which together create an end-to-end platform for enterprises and consumers.
+
+Despite this year’s rally, Power argued the backdrop remains favorable as AI demand continues to fuel cloud strength. Microsoft opened fiscal 2026 (FY26) with an 18% revenue gain to $77.7 billion, driven by Azure and Intelligent Cloud. Azure grew 40% year over year, while the company’s overall cloud business—now about 60% of revenue—expanded 25% in constant currency.
+
+Power pointed to rising Copilot adoption, which has surpassed 150 million monthly active users, alongside steady momentum across Microsoft 365, LinkedIn and Dynamics, which collectively grew 17%.
+
+He also praised Microsoft’s profitability as a standout feature as the company delivered a 49% operating margin and a 33% free-cash-flow margin.
+
+While acknowledging the scale of upcoming AI investments, with capex projected to rise from $88 billion in fiscal 2025 to $143 billion in 2026, Power still sees “a strong $74 billion of free cash flow (FCF) in F26.”
+
+
+
+3rd party Ad. Not an offer or recommendation by Investing.com. See disclosure here or remove ads.
+Microsoft stock trades at roughly 29 times Baird’s 2026 adjusted EPS estimate—above the market but below prior peaks.
+
+Power maintains that Microsoft’s “strong double-digit growth coupled with impressive margins” should continue to “stack up well relative to the broader market.”
+
+He also argued that while “there’s certainly growing AI speculation in the market,” predicting any bubble is difficult, and valuations for Microsoft and its hyperscaler peers “don’t seem particularly heady relative to the growth outlook.”
+
+Wedbush adds Meta to Best Ideas list after results
+
+Broker Wedbush added Meta Platforms to its Best Ideas list on Thursday, saying sentiment has improved after the company’s third-quarter results. The firm maintained its $920 price target.
+
+Analysts said concerns had been building around Meta’s expense and capex outlook, but believe the spending “has been justified,” pointing to the rollout of AI capabilities across its advertising systems and recommendation engines. They noted healthy demand trends in the core business and management’s continued focus on long-term strategic priorities.
+
+Wedbush highlighted “robust growth in Meta’s core advertising business,” constructive commentary on Meta AI and Superintelligence Labs, and traction from new AI-driven hardware products.
+
+Meta shares trade at roughly 19 times its 2027 GAAP EPS estimate, a slight discount to peer Alphabet. “We think the risk/reward is compelling with limited downside from here following the recent pullback in shares,” Wedbush analysts said.
+
+Meta ended October with third-quarter results showing a 26% rise in revenue, ahead of forecasts, while operating costs increased 32%. The company also cautioned that capital spending will be “notably larger” next year as it accelerates AI investment and expands its data-center network.
+
+
+3rd party Ad. Not an offer or recommendation by Investing.com. See disclosure here or remove ads.
+Setup for Tesla stock remains ’tricky’ as physical AI is ’a long way off’: analyst
+Tesla’s shareholder approval of Elon Musk’s $1 trillion compensation plan removes a major uncertainty, yet some say the stock’s trajectory remains “tricky” because most of its future value depends on still-unproven AI initiatives.
+
+Truist Securities analyst William Stein called retaining Musk “imperative for the company’s success,” noting that the package is aligned with shareholder interests since it vests only if Tesla hits ambitious market-cap and operational milestones.
+
+Stein emphasized that the plan is designed more to secure Musk’s leadership and voting power than its nominal dollar figure, especially as Tesla’s physical AI roadmap becomes a more central driver of long-term value.
+
+He estimates that only about 11% of Tesla’s valuation comes from the auto segment and another 11% from energy, while roughly two-thirds is tied to AI-centric projects including Full Self-Driving, robotaxis and humanoid robots.
+
+“We continue to see TSLA as much more of a physical AI company than a car company,” he said.
+
+Still, Stein cautioned that these businesses remain early. He described Tesla’s Full Self-Driving (FSD) solution as “impressive, but not yet working as expected,” with the robotaxi effort “just getting going” and likely constrained until FSD reaches flawless performance.
+
+With Tesla trading at more than 200 times 2026 consensus earnings, he argued the stock already embeds a significant amount of future AI success, making the risk-reward difficult.
+
+
+
+3rd party Ad. Not an offer or recommendation by Investing.com. See disclosure here or remove ads.
+“Because the physical AI projects are so uncertain, it’s difficult to recommend the stock,” he wrote.
+
+While Musk’s continued leadership improves the backdrop, Stein said the payoff from physical AI "is still a lon way off."
+
+Truist reiterated its Hold rating and $406 price target.
+
+Micron named Morgan Stanley’s Top Pick with a Street-high target
+Meanwhile, Micron Technology may be heading into “uncharted territory," according to Morgan Stanley, as tightening supply pushes the memory market toward conditions last seen in 2018.
+
+The bank named the company its top pick and lifted its price target to a Street-high $325.
+
+Analyst Joseph Moore said “serial upwards revisions” could begin “as soon as next week,” citing increasingly firm dynamics in DRAM.
+
+“We are entering uncharted territory, as we have a 2018-style shortage forming but from a much higher EPS starting point,” he wrote, adding that the setup points to “new highs in earnings power.” The bank now estimates $25 in calendar 2026 earnings.
+
+Moore said DDR5 spot prices have tripled since it upgraded the stock just over a month ago, with customer commentary suggesting the market “feels most reminiscent of 2018,” except that “earnings are already at record levels.”
+
+The analyst added that expectations for “double-digit price increases” likely understate current activity, highlighting that transactions are occurring “well above that level.”
+
+Stronger DDR5 margins are seen offsetting any potential risk from HBM4 development, with Moore emphasizing that “it doesn’t really matter” given prevailing pricing trends.
+
+
+3rd party Ad. Not an offer or recommendation by Investing.com. See disclosure here or remove ads.
+While valuations across memory names have climbed, he thinks Micron still has further to run.
+
+“We think the stock has yet to fully price in the upside that’s coming,” Moore said, pointing to AI-driven demand that is lifting sentiment despite lingering uncertainty.

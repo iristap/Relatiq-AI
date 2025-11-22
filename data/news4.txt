@@ -1,0 +1,22 @@
+GMI Cloud to build $500 million AI data center in Taiwan with Nvidia
+Source : https://www.investing.com/news/company-news/gmi-cloud-to-build-500-million-ai-data-center-in-taiwan-with-nvidia-93CH-4361644
+Published 11/17/2025, 06:09 AM
+
+Investing.com -- GMI Cloud announced Monday it will construct a $500 million artificial intelligence data center in Taiwan with support from U.S. chipmaker NASDAQ:NVDA.
+
+The U.S.-based cloud services provider plans to bring the facility online by March 2026. The data center will be powered by Nvidia’s new Blackwell GB300 chips and will house approximately 7,000 GPUs across 96 high-density racks. The facility will be capable of processing nearly 2 million tokens per second and will consume around 16 megawatts of power.
+
+GMI Cloud Founder and CEO Alex Yeh emphasized that Taiwan needs more data centers as "strategic assets" to support its AI development. He noted that the island’s power-supply challenges can be addressed.
+
+Yeh also mentioned that AI demand has been robust, with the company’s GPU utilization "almost full."
+
+"You want to promote local ecosystems - you have to build the data centre first, you have to build the AI cluster first," Yeh said.
+
+This article was generated with the support of AI and reviewed by an editor. For more information see our T&C.
+
+
+3rd party Ad. Not an offer or recommendation by Investing.com. See disclosure here or remove ads.
+Is NVDA a bargain right now?
+The fastest way to find out is with our Fair Value calculator. We use a mix of 17 proven industry valuation models for maximum accuracy.
+
+Get the bottom line for NVDA plus thousands of other stocks and find your next hidden gem with massive upside.

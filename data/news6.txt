@@ -1,0 +1,28 @@
+AMD climbs after outlining plan for steep growth in AI data center chip market
+Source : https://www.investing.com/news/stock-market-news/amd-stock-climbs-after-outlining-plan-for-35-revenue-growth-20-eps-target-4349775
+Published 11/11/2025, 04:40 PM
+Updated 11/12/2025, 10:30 AM
+
+Investing.com -- Advanced Micro Devices (NASDAQ:AMD) stock rose over 10% in early U.S. trading on Wednesday, after the chipmaker unveiled long-term growth targets at its first financial analyst day in three years.
+
+The firm’s share price has surged by 16% since early October, when it signed a mulityear agreement with ChatGPT maker OpenAI that is anticipated to rake in tens of billions of dollars in annual revenue. The deal helped to soothe some concerns over the challenge AMD can mount to closest rival Nvidia during a time when demand for the companies’ AI-optimized chips is soaring.
+
+CEO Lisa Su estimated that the market for its data center chips -- processors crucial to powering cutting-edge AI models -- will expand to $1 trillion by 2030, fueled in large part by the AI boom. Nvidia boss Jensen Huang has previously projected that the AI infrastructure market will grow to $3 trillion to $4 trillion by the beginning of the next decade.
+
+Against this backdrop, AMD said it expects annual data center revenue to climb to $100 billion within the next five years, while its earnings are expected to more than triple.
+
+AMD outlined plans to achieve more than 35% revenue compound annual growth rate (CAGR) over the coming three to five years, along with adjusted operating margins exceeding 35% and adjusted earnings per share of more than $20. Su also said that AMD has built "an M&A machine" designed to boost its AI capabilities through a series of smaller software acquistions.
+
+
+3rd party Ad. Not an offer or recommendation by Investing.com. See disclosure here or remove ads.
+"AMD is entering a new era of growth fueled by our leadership technology roadmaps and accelerating AI momentum," said AMD CEO Lisa Su during a presentation on Tuesday. "With the broadest portfolio of products and our deepening strategic partnerships, AMD is uniquely positioned to lead the next generation of high-performance and AI computing."
+
+The semiconductor group, which is due to launch its next-generation MI400 series of AI chips in 2026, highlighted strong momentum at its data center business, where it expects to deliver more than 60% revenue CAGR. AMD is looking to achieve over 50% server CPU revenue market share and drive more than 80% CAGR in data center AI revenue. 
+
+AMD noted that its Instinct MI350 Series GPUs represent the fastest ramping product in company history, with deployments at major cloud providers including Oracle Cloud Infrastructure. 
+
+In its client and gaming segment, AMD expects to exceed 40% client revenue market share while building on its base of more than one billion AMD-based gaming devices. The company also anticipates over 10% revenue CAGR across its embedded and client and gaming businesses.
+
+"We continue to view AMD’s prospects positively within the accelerating AI total addressable market backdrop," analysts at Stifel said in a note to clients.
+
+(Scott Kanowsky and Reuters contributed reporting.)
