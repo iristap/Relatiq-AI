@@ -29,5 +29,26 @@ class GraphDB:
         for q in queries:
             self.query(q)
 
+    @property
+    def get_schema(self):
+        """Returns the graph schema."""
+        query = """
+        CALL apoc.meta.schema() YIELD value as schema
+        RETURN schema
+        """
+        try:
+            result = self.query(query)
+            if result:
+                return result[0]['schema']
+        except Exception:
+            # Fallback if APOC is not available
+            node_labels = self.query("CALL db.labels()")
+            rel_types = self.query("CALL db.relationshipTypes()")
+            return {
+                "node_labels": [r[0] for r in node_labels],
+                "relationship_types": [r[0] for r in rel_types]
+            }
+        return {}
+
 # Singleton instance
 db = GraphDB()
