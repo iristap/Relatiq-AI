@@ -1,0 +1,7 @@
+Oracle, Microsoft, and OpenAI Partner on Stargate AI Infrastructure
+
+https://semianalysis.com/2025/06/30/how-oracle-is-winning-the-ai-compute-market/
+
+June 2024 (announced) / Partnership expanded 2025
+
+Oracle signed 15-year datacenter deal for Stargate project with OpenAI, providing ~880MW capacity ($15-20B contract value). Partnership includes Microsoft Azure integration and CoreWeave infrastructure. Oracle also partners with ByteDance for massive AI infrastructure buildout.

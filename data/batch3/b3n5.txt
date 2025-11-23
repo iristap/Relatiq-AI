@@ -1,0 +1,7 @@
+Google and Hugging Face Form Strategic AI Partnership
+
+https://www.cnbc.com/2023/08/24/google-amazon-nvidia-amd-other-tech-giants-invest-in-hugging-face.html
+
+August 24, 2023
+
+Google invested in Hugging Face's $235M Series D round (valuation: $4.5B) alongside Amazon, Nvidia, AMD, IBM. Google Cloud partnership allows developers to use GCP infrastructure for Hugging Face models and services.

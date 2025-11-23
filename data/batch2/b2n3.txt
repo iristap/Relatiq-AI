@@ -1,0 +1,36 @@
+Major analyst and enterprise forecasts on the AI market
+https://www.reuters.com/business/major-analyst-enterprise-forecasts-ai-market-2025-11-13/
+November 13, 20258:49 PM GMT+7Updated November 13, 2025
+
+Nov 13 (Reuters) - Technology executives and analysts expect artificial intelligence to generate hundreds of billions of dollars in value, yet forecasts for the market diverge significantly based on the underlying assumptions and metrics employed.
+Here are some of the major estimates provided by tech and analyst firms on the addressable market for AI, software and infrastructure spending:
+
+NVIDIA (NVDA.O),
+Jensen Huang, founder and CEO of Nvidia, said earlier this year the chip giant sees $3 trillion to $4 trillion in AI infrastructure spend by the end of the decade, referring to artificial intelligence as the start of a new industrial revolution.
+
+AMD (AMD.O),
+Advanced Micro Devices CEO Lisa Su said at the company's analyst day in November she expects the market for AMD's data center chips to grow to $1 trillion by 2030. AI will drive much of the growth to the trillion-dollar figure and that market includes AMD's plain processor and networking chips, along with its specialized AI chips.
+
+BROADCOM (AVGO.O), 
+Hock Tan, CEO of AI custom chipmaker Broadcom, said last year the company expects a revenue opportunity from AI in the range of $60 billion to $90 billion for its custom chips in fiscal 2027, indicating that hyperscale customers will deploy millions of chip clusters at the time.
+
+SALESFORCE (CRM.N),
+Salesforce CEO Marc Benioff at the start of the year said the "digital labor revolution" would lead to market ranging from a "few trillion to $12 trillion" as the company works to automate administrative and logistical tasks through its AI agent platform Agentforce.
+
+McKINSEY & COMPANY
+A study from McKinsey in 2023 estimated that generative artificial intelligence could deliver value in the range of $2.6 trillion to $4.4 trillion, opens new tab across dozens of use cases and industries.
+
+
+
+PwC
+A PwC report, opens new tab from 2017 says AI could contribute up to $15.7 trillion to the global economy in 2030. Of this, $6.6 trillion is likely to come from increased productivity and $9.1 trillion from consumption side effects, the report said. MORGAN 
+
+STANLEY (MS.N),
+Full AI adoption across S&P 500 companies could add up to an annual net benefit of $920 billion, opens new tab, according to Morgan Stanley.
+
+In the long term, this potentially translates to a market cap increase of $13 trillion to $16 trillion for the S&P 500.
+
+GARTNER (IT.N),
+Gartner expects global AI spend at nearly $1.5 trillion in 2025, opens new tab, and to top $2 trillion in 2026.
+
+Reporting by Zaheer Kachwala and Arnav Mishra in Bengaluru

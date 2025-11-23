@@ -1,0 +1,40 @@
+Artificial Intelligencer: The case for selling Nvidia
+https://www.reuters.com/technology/artificial-intelligence/artificial-intelligencer-case-selling-nvidia-2025-11-13/
+November 13, 20257:57 PM GMT+7Updated November 13, 2025
+
+Nov 13 (Reuters) - This was originally published in the Artificial Intelligencer newsletter, which is issued every Wednesday. Sign up here to learn about the latest breakthroughs in AI and tech.
+This earnings season offered new insight into a question investors have been asking since ChatGPT first shook the market: between startups and incumbents, who’ll win the AI race?
+
+Three years later, the answer seems to be both — at least for the biggest names.
+
+Alphabet and Amazon have poured capital into AI startup Anthropic, which has surged in valuation —more than tripled this year from $61 billion in March to about $183 billion after its September funding round.
+The jump contributed to Amazon’s quarterly profit , boosted by a $9.5 billion pretax gain from its investment, while Alphabet booked $10.7 billion in net gains on equity securities, which included its Anthropic holdings. Amazon and Google are each estimated to hold double-digit ownership stakes in the company.
+Microsoft, meanwhile, showed the other side of the trade. Its quarterly profit was weighed down by a $4.1 billion net loss from OpenAI, in which it owns about 30%. Because Microsoft uses equity accounting, it must report its share of OpenAI’s operating losses rather than mark its stake to market value — even as OpenAI’s valuation has soared and Azure continues to benefit from exclusive access to OpenAI’s API.
+
+Analysts call this dynamic a form of AI “round-tripping” — the same hyperscalers funding top AI model developers, who in turn spend much of that capital on their investors’ cloud infrastructure and chips. Once seen as circular, the cycle is now adding billions in gains for some and volatility for others.
+Big Tech isn’t the only one trying to make sense of AI’s balance-sheet impact. Famed investor Michael Burry is shorting Nvidia, while SoftBank sold off its Nvidia stakes as part of its AI bets. We’ll unpack why, and what the reopening of the tech IPO window means. Scroll on.
+Email me, opens new tab or follow me onLinkedIn, opens new tab to share any thoughts.
+Our latest reporting in tech & AI:
+Anthropic to invest $50 billion to build data centers in US
+AMD expects profit to triple by 2030, data center chip market to grow to $1 trillion
+OpenAI discussed government loan guarantees for chip plants, not data centers, Altman says
+Exclusive-Google signs Amazon reforestation deal to carbon removal credits to offset AI buildout
+Are you listening to bots? Survey shows AI music is virtually undetectable
+CoreWeave's shares fall as data center delay hits annual revenue forecast
+The case for selling Nvidia
+Two of the world’s most recognizable investors are cutting — or outright shorting the most valuable company in the world at the center of the AI boom. But they’re doing it for very different reasons.
+
+Michael Burry, the investor made famous by “The Big Short”, disclosed put options against Nvidia and is now casting doubt on the hardware spending boom by major cloud providers. He’s accusing hyperscalers of using aggressive accounting to overstate profits tied to their massive infrastructure buildouts.
+“Understating depreciation by extending the useful life of assets artificially boosts earnings — one of the more common frauds of the modern era,” he wrote.
+Burry argues that as companies like Microsoft, Google, Oracle and Meta pour billions into Nvidia chips and servers, they’re also quietly stretching out depreciation schedules to make earnings look smoother. He estimates that between 2026 and 2028, those accounting choices could understate depreciation by about $176 billion, inflating reported profits across the sector. By his math, Oracle’s and Meta’s profits could appear roughly 27% and 21% higher, respectively, than they would under more conservative assumptions.
+
+The question of how long GPUs should be considered “useful” is one of the most consequential debates in the AI boom. Nvidia has accelerated its hardware release cycle from every two to three years to annually, making older chips obsolete faster — at least on paper. Yet the market for secondhand GPUs remains surprisingly resilient.
+CoreWeave’s filings show it depreciates GPUs evenly over six years — an accounting method that assumes the chips lose value gradually, while rivals like Nebius use four years. Sources told me that for some neo-cloud companies, GPUs older than five years are still in demand despite physical wear. While Burry is betting against what he sees as financial engineering, SoftBank’s Masayoshi Son is selling Nvidia for a more practical reason: cash to plow back into AI.
+SoftBank has been unloading some of its public holdings — including about $5.8 billion worth of Nvidia stock — to help finance its $22.5 billion commitment to OpenAI by December. It’s a perfect illustration of the AI money loop: SoftBank made billions from Nvidia, sold the stock and then funneled those profits into OpenAI, whose projects like Stargate will eventually buy more Nvidia chips.
+SoftBank has also raised capital through a mix of bonds, hybrid securities and loans to fund its AI expansion, both for OpenAI and a series of hardware efforts centered around its crown jewel Arm. CreditSights estimates SoftBank has made over $41 billion in recent investments and purchases. With a loan-to-value ratio of just 16.5%, this gives the investment powerhouse more borrowing capacity and reassures creditors and investors that the company isn’t overleveraged.
+So while Burry is shorting Nvidia over accounting excess, Son is selling for liquidity and optionality. Different motives — same signal: investors on different sides of the AI boom are starting to ask how long the steam can last, and where their capital can work harder in the midst of it.
+
+After a few years of silence, the tech IPO market is stirring again. According to Accel’s latest report, opens new tab , software and AI listings are starting to rebound: after just one IPO in 2023 and four in 2024, this year has already seen eight new tech debuts, including names like Figma, CoreWeave and Navan. It’s still a fraction of the 46 listings during 2021’s boom — but investors and bankers say the gears are finally moving again despite uncertainties over the government shutdown.
+Magdalena Heinrich, head of U.S. technology ECM at Bank of America, told me her team is “busy again,” with a strong IPO pipeline shaping up for 2026. What’s driving the demand in this technology wave, she sees it, is the AI capital requirement.
+“These companies need more money than ever to compete and to invest in infrastructure — and the public markets are looking attractive again because they offer a lower cost of capital.”
+That dynamic also explains why we reported OpenAI is quietly laying the groundwork for a potential listing. In other words, this new wave of IPOs isn’t just about liquidity, it’s also about fuel. The AI race has made scaling expensive, and venture capital alone can’t cover it

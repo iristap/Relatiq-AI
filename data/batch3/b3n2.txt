@@ -1,0 +1,7 @@
+Amazon Invests Additional $4 Billion in Anthropic, Bringing Total to $8 Billion
+
+https://www.cnbc.com/2024/11/22/amazon-to-invest-another-4-billion-in-anthropic-openais-biggest-rival.html
+
+November 22, 2024, 6:00 AM EST
+
+Amazon completed additional $4B investment in Anthropic (after initial $4B announced Sept 2023), making AWS Anthropic's primary cloud and training partner. Anthropic will use AWS Trainium chips for AI model development.

@@ -1,0 +1,18 @@
+Amazon, Microsoft back effort to curb Nvidia's exports to China, WSJ reports
+https://www.reuters.com/business/retail-consumer/amazon-microsoft-back-effort-restrict-nvidias-exports-china-wsj-reports-2025-11-14/
+November 14, 20252:11 PM GMT+7Updated November 14, 2025
+
+Nov 13 (Reuters) - Amazon (AMZN.O), opens new tab is joining Microsoft (MSFT.O), opens new tab in backing legislation to further restrict chipmaker Nvidia's (NVDA.O), opens new tab ability to export chips to China, the Wall Street Journal reported on Thursday, citing people familiar with the matter.
+The legislation, known as the GAIN AI Act, is also backed by AI startup Anthropic, the report said.
+Short for Guaranteeing Access and Innovation for National Artificial Intelligence (GAIN), the Act was introduced as part of the National Defense Authorization Act and stipulates that AI chipmakers prioritize domestic orders for advanced processors before supplying them to foreign customers.
+
+Microsoft publicly came out in favor of the legislation, while officials at Amazon's cloud unit have privately told Senate staffers that they also support it, the report said.
+Meta Platforms (META.O), opens new tab and Alphabet's Google (GOOGL.O), opens new tab have not taken a position on the Act, and neither has U.S. President Donald Trump, the report added.
+White House officials, including AI czar David Sacks, told GAIN Act sponsor Senator Jim Banks that the policy's impact is limited as the Commerce Department already regulates chip exports, the report said.
+Reuters could not immediately verify the report. Amazon declined to comment, while Microsoft, Anthropic and the White House did not immediately respond to Reuters' requests for comment.
+
+Nvidia, the world's dominant chipmaker, has previously said the GAIN AI Act stands to restrict global competition for advanced chips, limiting computing power available to other countries.
+The touted legislation reflects Washington's attempt to prioritize American needs amid fears that China would leverage access to high-end AI capabilities to supercharge its military.
+
+
+Reporting by Ananya Palyekar in Bengaluru; Editing by Rashmi Aich
