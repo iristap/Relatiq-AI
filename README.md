@@ -118,7 +118,3 @@ mind-ai/
 ├── requirements.txt    # Python dependencies
 └── README.md           # Project documentation
 ```
-
-## License
-
-[MIT](LICENSE)
