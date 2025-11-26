@@ -112,11 +112,8 @@ async def process_file(filepath):
         print(f"Error processing {filepath}: {e}")
 
 async def main():
-    # Get all txt files
     files = glob.glob("data/batch3/*.txt")
-    # if not files:
-    #     files = glob.glob("c:/git/mind-ai/data/*.txt")
-        
+    
     print(f"Found {len(files)} files.")
     
     # Process files
