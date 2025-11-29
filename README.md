@@ -33,7 +33,7 @@ Before you begin, ensure you have the following installed:
 
 ```bash
 git clone https://github.com/iristap/Relatiq-AI.git
-cd mind-ai
+cd Relatiq-AI
 ```
 
 ### 2. Backend Setup
