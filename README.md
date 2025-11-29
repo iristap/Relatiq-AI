@@ -32,7 +32,7 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/iristap/mind-ai.git
+git clone https://github.com/iristap/Relatiq-AI.git
 cd mind-ai
 ```
 
