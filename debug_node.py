@@ -11,3 +11,6 @@ if result:
     print(f"Properties: {dict(node)}")
 else:
     print("No nodes found.")
+
+
+#idea เปลืยนทั้งหมดเป็นวัตถุดิบ หาเมนูที่ใช้วัตถุดิบเหล่านั้น very good idea
