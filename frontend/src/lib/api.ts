@@ -29,6 +29,8 @@ export interface Article {
   date: string;
   source?: string;
   url?: string;
+  tier?: string;
+  status?: string;
 }
 
 export interface GraphNode {
@@ -48,13 +50,33 @@ export interface GraphData {
   edges: GraphEdge[];
 }
 
-export const getArticles = async () => {
-  const response = await api.get<Article[]>('/articles');
+export const getArticles = async (params?: {
+  date_range?: string,
+  tiers?: string[],
+  news_status?: string[],
+  sectors?: string[],
+  entity_search?: string
+}) => {
+  const response = await api.get<Article[]>('/articles', { params });
   return response.data;
 };
 
-export const getNetwork = async (params: { article_titles?: string[], node_types?: string[], rel_types?: string[], min_degree?: number }) => {
+export const getNetwork = async (params: {
+  article_titles?: string[],
+  node_types?: string[],
+  rel_types?: string[],
+  date_range?: string,
+  tiers?: string[],
+  news_status?: string[],
+  sectors?: string[],
+  entity_search?: string
+}) => {
   const response = await api.get<GraphData>('/graph/network', { params });
+  return response.data;
+};
+
+export const getSectors = async () => {
+  const response = await api.get<string[]>('/sectors');
   return response.data;
 };
 

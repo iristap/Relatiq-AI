@@ -60,7 +60,9 @@ class ArticleMetadata(BaseModel):
     source: Optional[str] = Field(description="The publisher or source of the news (e.g., Investing.com, Reuters).")
     url: Optional[str] = Field(description="The URL of the article.")
     date: Optional[str] = Field(description="The publication date in ISO format (YYYY-MM-DD). If not found, return null.")
-    status: Optional[Literal["Confirmed News", "Speculation"]] = Field(description="The status of the article. Options: Confirmed News, Speculation.")
+    status: Optional[Literal["Confirmed News", "Speculation", "Analysis/Outlook"]] = Field(
+        description="The status of the article. Options: Confirmed News (Facts/Official), Speculation (Unverified/Hearsay), Analysis/Outlook (Expert Prediction/Forecast)."
+    )   
 
 metadata_parser = PydanticOutputParser(pydantic_object=ArticleMetadata)
 
@@ -142,25 +144,27 @@ async def process_file(filepath):
         
         # Extract Metadata using LLM
         try:
-            metadata = metadata_chain.invoke({"text": text[:2000]}) # Send first 2000 chars for metadata to save tokens
+            metadata = metadata_chain.invoke({"text": text}) # Send first 2000 chars for metadata to save tokens
             title = metadata.title
             source = metadata.source
             url = metadata.url
             date_str = metadata.date
+            news_status = metadata.status
             
             # Determine Publisher Tier
-            tier = get_publisher_tier(source)
+            publisher_tier = get_publisher_tier(source)
             
-            print(f"Extracted Metadata: {title} | {source} ({tier}) | {date_str} | {url}")
+            print(f"Extracted Metadata: {title} | {source} ({publisher_tier}) | {date_str} | {url} | {news_status}")
         except Exception as e:
             print(f"Metadata extraction failed for {filepath}: {e}")
             title = "Unknown"
             source = "Unknown"
-            tier = "C"
+            publisher_tier = "C"
             url = "Unknown"
             date_str = ""
+            news_status = "Unknown"
 
-        doc = Document(page_content=text, metadata={"source": filepath, "title": title, "date": date_str, "publisher": source, "tier": tier, "url": url})
+        doc = Document(page_content=text, metadata={"source": filepath, "title": title, "date": date_str, "publisher": source, "publisher_tier": publisher_tier, "url": url, "news_status": news_status})
         
         # Extract Graph Data
         graph_documents = await graph_transformer.aconvert_to_graph_documents([doc])
@@ -170,7 +174,8 @@ async def process_file(filepath):
             for relationship in graph_doc.relationships:
                 relationship.properties["title"] = title
                 relationship.properties["date"] = date_str
-                relationship.properties["tier"] = tier
+                relationship.properties["publisher_tier"] = publisher_tier
+                relationship.properties["news_status"] = news_status
         
         # Add to Neo4j
         graph.add_graph_documents(graph_documents, include_source=True)
@@ -217,7 +222,7 @@ async def process_file(filepath):
         print(f"Error processing {filepath}: {e}")
 
 async def main():
-    files = glob.glob(r"data\batch1\*.txt")
+    files = glob.glob(r"data\batch3\*.txt")
     
     print(f"Found {len(files)} files.")
     
