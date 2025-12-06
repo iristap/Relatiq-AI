@@ -17,14 +17,14 @@ def test_article_filters():
         print(f"Failed: {response.status_code} - {response.text}")
 
     # 2. Test Tier Filter
-    print("\n2. Testing Tier Filter (Tier A)...")
-    response = requests.get(f"{BASE_URL}/articles", params={"tiers": ["Tier A"]})
+    print("\n2. Testing Tier Filter (Tier A -> 'A')...")
+    response = requests.get(f"{BASE_URL}/articles", params={"tiers": ["A"]})
     if response.status_code == 200:
         articles = response.json()
         print(f"Found {len(articles)} Tier A articles.")
         for a in articles[:3]:
             print(f"  - {a['title']} ({a['tier']})")
-            if a['tier'] != 'Tier A':
+            if a['tier'] != 'A':
                 print("  ERROR: Wrong tier returned!")
     else:
         print(f"Failed: {response.status_code} - {response.text}")

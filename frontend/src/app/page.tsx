@@ -125,7 +125,7 @@ export default function Home() {
     try {
       const data = await getArticles({
         date_range: dateRange,
-        tiers: selectedTiers.length > 0 ? selectedTiers : undefined,
+        tiers: selectedTiers.length > 0 ? selectedTiers.map(t => t.replace('Tier ', '')) : undefined,
         news_status: selectedStatus.length > 0 ? selectedStatus : undefined,
         sectors: selectedSectors.length > 0 ? selectedSectors : undefined,
         entity_search: entitySearch || undefined
