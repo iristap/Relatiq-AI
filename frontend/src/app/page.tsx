@@ -257,118 +257,118 @@ export default function Home() {
               <Filter className="w-4 h-4" /> Filters
             </h2>
             <div className="space-y-6">
-              {/* Date Range */}
+              {/* News Tier */}
               <div>
-                <label className="text-xs font-medium text-slate-500 mb-1 block">Date range</label>
-                <select
-                  value={dateRange}
-                  onChange={(e) => setDateRange(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none"
-                >
-                  <option value="7d">Last 7 days</option>
-                  <option value="30d">Last 30 days</option>
-                  <option value="3m">Last 3 months</option>
-                  <option value="all">All time</option>
-                </select>
-              </div>
-
-              {/* Entity Search */}
-              <div>
-                <label className="text-xs font-medium text-slate-500 mb-1 block">Entity Search</label>
-                <div className="relative">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input
-                    type="text"
-                    value={entitySearch}
-                    onChange={(e) => setEntitySearch(e.target.value)}
-                    placeholder="Search companies..."
-                    className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Sectors */}
-              <div>
-                <label className="text-xs font-medium text-slate-500 mb-2 block">Sectors</label>
-                <div className="flex flex-wrap gap-2">
-                  {availableSectors.map(sector => (
-                    <button
-                      key={sector}
-                      onClick={() => {
-                        setSelectedSectors(prev =>
-                          prev.includes(sector) ? prev.filter(s => s !== sector) : [...prev, sector]
-                        );
-                      }}
-                      className={clsx(
-                        "px-2 py-1 text-xs rounded-full border transition-colors",
-                        selectedSectors.includes(sector)
-                          ? "bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-300 dark:border-indigo-800"
-                          : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-indigo-300"
-                      )}
-                    >
-                      {sector}
-                    </button>
+                <label className="text-xs font-medium text-slate-500 mb-2 block">News Tier</label>
+                <div className="space-y-2">
+                  {['Tier A', 'Tier B', 'Tier C'].map(tier => (
+                    <label key={tier} className="flex items-center gap-2 cursor-pointer group">
+                      <div className={clsx(
+                        "w-4 h-4 rounded border flex items-center justify-center transition-colors",
+                        selectedTiers.includes(tier)
+                          ? "bg-indigo-600 border-indigo-600"
+                          : "border-slate-300 dark:border-slate-600 group-hover:border-indigo-400"
+                      )}>
+                        {selectedTiers.includes(tier) && <CheckCircle2 className="w-3 h-3 text-white" />}
+                      </div>
+                      <input
+                        type="checkbox"
+                        className="hidden"
+                        checked={selectedTiers.includes(tier)}
+                        onChange={() => {
+                          setSelectedTiers(prev =>
+                            prev.includes(tier) ? prev.filter(t => t !== tier) : [...prev, tier]
+                          );
+                        }}
+                      />
+                      <span className="text-sm text-slate-600 dark:text-slate-300">{tier}</span>
+                    </label>
                   ))}
                 </div>
               </div>
 
-              <div className="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-4">
-                {/* News Tier */}
+              {/* News Status */}
+              <div>
+                <label className="text-xs font-medium text-slate-500 mb-2 block">News Status</label>
+                <div className="space-y-2">
+                  {['Confirmed News', 'Speculation', 'Analysis/Outlook'].map(status => (
+                    <label key={status} className="flex items-center gap-2 cursor-pointer group">
+                      <div className={clsx(
+                        "w-4 h-4 rounded border flex items-center justify-center transition-colors",
+                        selectedStatus.includes(status)
+                          ? "bg-indigo-600 border-indigo-600"
+                          : "border-slate-300 dark:border-slate-600 group-hover:border-indigo-400"
+                      )}>
+                        {selectedStatus.includes(status) && <CheckCircle2 className="w-3 h-3 text-white" />}
+                      </div>
+                      <input
+                        type="checkbox"
+                        className="hidden"
+                        checked={selectedStatus.includes(status)}
+                        onChange={() => {
+                          setSelectedStatus(prev =>
+                            prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
+                          );
+                        }}
+                      />
+                      <span className="text-sm text-slate-600 dark:text-slate-300">{status}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-6">
+                {/* Date Range */}
                 <div>
-                  <label className="text-xs font-medium text-slate-500 mb-2 block">News Tier</label>
-                  <div className="space-y-2">
-                    {['Tier A', 'Tier B', 'Tier C'].map(tier => (
-                      <label key={tier} className="flex items-center gap-2 cursor-pointer group">
-                        <div className={clsx(
-                          "w-4 h-4 rounded border flex items-center justify-center transition-colors",
-                          selectedTiers.includes(tier)
-                            ? "bg-indigo-600 border-indigo-600"
-                            : "border-slate-300 dark:border-slate-600 group-hover:border-indigo-400"
-                        )}>
-                          {selectedTiers.includes(tier) && <CheckCircle2 className="w-3 h-3 text-white" />}
-                        </div>
-                        <input
-                          type="checkbox"
-                          className="hidden"
-                          checked={selectedTiers.includes(tier)}
-                          onChange={() => {
-                            setSelectedTiers(prev =>
-                              prev.includes(tier) ? prev.filter(t => t !== tier) : [...prev, tier]
-                            );
-                          }}
-                        />
-                        <span className="text-sm text-slate-600 dark:text-slate-300">{tier}</span>
-                      </label>
-                    ))}
+                  <label className="text-xs font-medium text-slate-500 mb-1 block">Date range</label>
+                  <select
+                    value={dateRange}
+                    onChange={(e) => setDateRange(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none"
+                  >
+                    <option value="7d">Last 7 days</option>
+                    <option value="30d">Last 30 days</option>
+                    <option value="3m">Last 3 months</option>
+                    <option value="all">All time</option>
+                  </select>
+                </div>
+
+                {/* Entity Search */}
+                <div>
+                  <label className="text-xs font-medium text-slate-500 mb-1 block">Entity Search</label>
+                  <div className="relative">
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="text"
+                      value={entitySearch}
+                      onChange={(e) => setEntitySearch(e.target.value)}
+                      placeholder="Search companies..."
+                      className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none"
+                    />
                   </div>
                 </div>
 
-                {/* News Status */}
+                {/* Sectors */}
                 <div>
-                  <label className="text-xs font-medium text-slate-500 mb-2 block">News Status</label>
-                  <div className="space-y-2">
-                    {['Confirmed News', 'Speculation', 'Analysis/Outlook'].map(status => (
-                      <label key={status} className="flex items-center gap-2 cursor-pointer group">
-                        <div className={clsx(
-                          "w-4 h-4 rounded border flex items-center justify-center transition-colors",
-                          selectedStatus.includes(status)
-                            ? "bg-indigo-600 border-indigo-600"
-                            : "border-slate-300 dark:border-slate-600 group-hover:border-indigo-400"
-                        )}>
-                          {selectedStatus.includes(status) && <CheckCircle2 className="w-3 h-3 text-white" />}
-                        </div>
-                        <input
-                          type="checkbox"
-                          className="hidden"
-                          checked={selectedStatus.includes(status)}
-                          onChange={() => {
-                            setSelectedStatus(prev =>
-                              prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
-                            );
-                          }}
-                        />
-                        <span className="text-sm text-slate-600 dark:text-slate-300">{status}</span>
-                      </label>
+                  <label className="text-xs font-medium text-slate-500 mb-2 block">Sectors</label>
+                  <div className="flex flex-wrap gap-2">
+                    {availableSectors.map(sector => (
+                      <button
+                        key={sector}
+                        onClick={() => {
+                          setSelectedSectors(prev =>
+                            prev.includes(sector) ? prev.filter(s => s !== sector) : [...prev, sector]
+                          );
+                        }}
+                        className={clsx(
+                          "px-2 py-1 text-xs rounded-full border transition-colors",
+                          selectedSectors.includes(sector)
+                            ? "bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-300 dark:border-indigo-800"
+                            : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-indigo-300"
+                        )}
+                      >
+                        {sector}
+                      </button>
                     ))}
                   </div>
                 </div>

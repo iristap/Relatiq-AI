@@ -4,19 +4,33 @@ Relatiq AI is a powerful tool designed to analyze financial news by constructing
 
 ## Key Features
 
-- **Graph Visualization**: Interactive network visualization of companies, persons, and topics, showing how they are connected through news articles.
-- **Timeline View**: A chronological display of news articles to track events over time.
-- **Company Analysis**: Deep dive into specific companies to see their connections, mentioned articles, and relationship paths to other entities.
-- **Advanced Search**: Search for specific entities and filter by node/relationship types.
-- **Data Ingestion**: Automated pipeline to ingest news articles and build the knowledge graph using LLMs.
+### 1. Article Selection & Filtering
+- **Dedicated Landing View**: Start by browsing and selecting relevant articles from a rich grid view.
+- **Smart Filters**: Filter news by **Date Range**, **Publisher Tier** (A, B, C), **News Status** (Confirmed, Speculation, Analysis), **Sector**, and **Entity**.
+- **News Cards**: Quickly assess article importance with visual badges for Tier and Status.
+
+### 2. Knowledge Graph Visualization
+- **Interactive Network**: Visualize connections between Companies, Persons, Products, and Sectors.
+- **Dynamic Graph Filters**: Filter the graph by Sector and Entity to focus on specific market segments.
+- **Reading Mode**: A focused mode to read article content alongside the graph context.
+
+### 3. AI-Powered Analysis
+- **Sentiment Analysis**: Automatically extracts and aggregates sentiment (Positive, Neutral, Negative) for companies mentioned in the news.
+- **Publisher Tiering**: Automatically categorizes news sources into Tiers (A: Major Global, B: Tech/Business, C: General) for credibility assessment.
+- **News Status Classification**: Distinguishes between "Confirmed News", "Speculation", and "Analysis/Outlook".
+- **Agentic Insights**: Ask natural language questions to the AI Agent to query the knowledge graph (e.g., "What companies are investing in AI?").
+
+### 4. Company Deep Dive
+- **Sentiment Cards**: View aggregated sentiment distribution for specific companies.
+- **Connection Analysis**: Explore paths and relationships between any two entities.
 
 ## Tech Stack
 
 - **Backend**: Python, FastAPI, LangChain
-- **Frontend**: Next.js, React, Tailwind CSS, Streamlit (for rapid prototyping/dashboard)
+- **Frontend**: Next.js, React, Tailwind CSS
 - **Database**: Neo4j (Graph Database)
 - **AI/LLM**: Google Gemini (via `google-genai` and `langchain-google-genai`)
-- **Visualization**: `react-force-graph-2d` (Frontend), `streamlit-agraph` (Streamlit)
+- **Visualization**: `react-force-graph-2d`
 
 ## Prerequisites
 
@@ -47,8 +61,6 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
-# OR if using uv/hatch
-uv sync
 ```
 
 Create a `.env` file in the root directory and add your configuration:
@@ -86,14 +98,6 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### Running the Streamlit Dashboard
-
-For a quick view of the data and graph capabilities:
-
-```bash
-streamlit run src/app.py
-```
-
 ### Ingesting Data
 
 To populate the graph with new data:
@@ -109,11 +113,10 @@ mind-ai/
 ├── frontend/           # Next.js Frontend application
 ├── src/
 │   ├── api/            # FastAPI backend routes and logic
-│   ├── app.py          # Streamlit dashboard application
-│   ├── ingest.py       # Data ingestion script
+│   ├── ingest.py       # Data ingestion script (Metadata, Graph, Sentiment)
 │   ├── graph_db.py     # Neo4j database connection handler
 │   └── ...
-├── data/               # Data storage (if applicable)
+├── data/               # Data storage
 ├── pyproject.toml      # Python project configuration
 ├── requirements.txt    # Python dependencies
 └── README.md           # Project documentation
