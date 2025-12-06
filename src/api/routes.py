@@ -10,6 +10,8 @@ class Article(BaseModel):
     date: str
     source: Optional[str] = None
     url: Optional[str] = None
+    tier: Optional[str] = None
+    status: Optional[str] = None
 
 class GraphNode(BaseModel):
     id: str
@@ -26,9 +28,63 @@ class GraphData(BaseModel):
     edges: List[GraphEdge]
 
 @router.get("/articles", response_model=List[Article])
-async def get_articles(limit: int = 500):
-    query = "MATCH (d:Document) RETURN d.title as title, d.date as date, d.publisher as source, d.url as url ORDER BY d.date DESC LIMIT $limit"
-    results = db.query(query, {"limit": limit})
+async def get_articles(
+    limit: int = 500,
+    date_range: Optional[str] = Query(None),
+    tiers: Optional[List[str]] = Query(None),
+    news_status: Optional[List[str]] = Query(None),
+    sectors: Optional[List[str]] = Query(None),
+    entity_search: Optional[str] = Query(None)
+):
+    # Calculate date threshold
+    date_filter_clause = ""
+    params = {"limit": limit, "tiers": tiers, "statuses": news_status, "sectors": sectors, "entity_search": entity_search}
+    
+    if date_range and date_range != "all":
+        from datetime import datetime, timedelta
+        today = datetime.now()
+        if date_range == "7d":
+            delta = timedelta(days=7)
+        elif date_range == "30d":
+            delta = timedelta(days=30)
+        elif date_range == "3m":
+            delta = timedelta(days=90)
+        else:
+            delta = timedelta(days=36500)
+            
+        threshold_date = (today - delta).strftime("%Y-%m-%d")
+        date_filter_clause = "AND d.date >= $threshold_date"
+        params["threshold_date"] = threshold_date
+
+    # Build Query
+    # We need to filter Documents based on their properties AND their relationships to specific nodes (Sectors/Entities)
+    
+    query = f"""
+    MATCH (d:Document)
+    WHERE 1=1
+    {date_filter_clause}
+    AND ($tiers IS NULL OR d.publisher_tier IN $tiers)
+    AND ($statuses IS NULL OR d.news_status IN $statuses)
+    
+    // Filter by Sector (if provided)
+    AND ($sectors IS NULL OR EXISTS {{
+        MATCH (d)-[:MENTIONS]->(n)
+        WHERE (n:Sector AND n.id IN $sectors) 
+           OR EXISTS {{ MATCH (n)-[:BELONGS_TO]->(s:Sector) WHERE s.id IN $sectors }}
+    }})
+    
+    // Filter by Entity Search (if provided)
+    AND ($entity_search IS NULL OR EXISTS {{
+        MATCH (d)-[:MENTIONS]->(n)
+        WHERE toLower(COALESCE(n.name, n.id)) CONTAINS toLower($entity_search)
+    }})
+    
+    RETURN d.title as title, d.date as date, d.publisher as source, d.url as url, d.publisher_tier as tier, d.news_status as status 
+    ORDER BY d.date DESC 
+    LIMIT $limit
+    """
+    
+    results = db.query(query, params)
     articles = []
     for r in results:
         try:
@@ -36,7 +92,9 @@ async def get_articles(limit: int = 500):
                 title=r.get('title') or "Untitled",
                 date=str(r.get('date') or ""),
                 source=r.get('source'),
-                url=r.get('url')
+                url=r.get('url'),
+                tier=r.get('tier'),
+                status=r.get('status')
             ))
         except Exception as e:
             print(f"Error processing article record: {r}, Error: {e}")
@@ -45,6 +103,16 @@ async def get_articles(limit: int = 500):
 
 @router.get("/graph/search")
 async def search_nodes(q: str):
+    """
+    Searches for graph nodes based on a query string.
+
+    Args:
+        q (str): The query string to search for in node names or IDs.
+
+    Returns:
+        List[GraphNode]: A list of graph nodes matching the query.
+    """
+
     query = """
     MATCH (n) 
     WHERE toLower(COALESCE(n.name, n.id)) CONTAINS toLower($q) 
@@ -59,21 +127,50 @@ async def search_nodes(q: str):
         nodes.append({"id": r['id'], "label": r['label'], "type": lbl})
     return nodes
 
+@router.get("/sectors")
+async def get_sectors():
+    query = "MATCH (n:Sector) RETURN DISTINCT COALESCE(n.name, n.id) as id ORDER BY id"
+    results = db.query(query)
+    return [r['id'] for r in results]
+
 @router.get("/graph/network", response_model=GraphData)
 async def get_network(
     article_titles: Optional[List[str]] = Query(None),
     node_types: Optional[List[str]] = Query(None),
     rel_types: Optional[List[str]] = Query(None),
-    min_degree: int = 1
+    date_range: Optional[str] = Query(None), # "7d", "30d", "3m", "all"
+    tiers: Optional[List[str]] = Query(None),
+    news_status: Optional[List[str]] = Query(None),
+    sectors: Optional[List[str]] = Query(None),
+    entity_search: Optional[str] = Query(None)
 ):
     nodes = []
     edges = []
     node_ids = set()
 
+    # Calculate date threshold
+    date_filter_clause = ""
+    params = {"labels": node_types, "types": rel_types, "tiers": tiers, "statuses": news_status, "sectors": sectors, "entity_search": entity_search}
+    
+    if date_range and date_range != "all":
+        from datetime import datetime, timedelta
+        today = datetime.now()
+        if date_range == "7d":
+            delta = timedelta(days=7)
+        elif date_range == "30d":
+            delta = timedelta(days=30)
+        elif date_range == "3m":
+            delta = timedelta(days=90)
+        else:
+            delta = timedelta(days=36500) # Default to all if unknown
+            
+        threshold_date = (today - delta).strftime("%Y-%m-%d")
+        date_filter_clause = "AND d.date >= $threshold_date"
+        params["threshold_date"] = threshold_date
+
     # Build query based on filters
     if article_titles:
         # Query centered on articles - Induced Subgraph
-        # Shows only nodes mentioned in the articles and relationships between them
         cypher_query = """
         MATCH (d:Document)-[:MENTIONS]->(n)
         WHERE d.title IN $titles
@@ -86,18 +183,60 @@ async def get_network(
         AND ($types IS NULL OR type(r) IN $types)
         RETURN n, r, m
         """
-        params = {"titles": article_titles, "labels": node_types, "types": rel_types}
+        params["titles"] = article_titles
     else:
-        # Default view
+        # Advanced Filtered View
+        # 1. Filter Documents first
+        # 2. Filter Nodes (Sectors, Entity Search)
+        
         cypher_query = f"""
-        MATCH (n)-[r]->(m)
-        WHERE ($labels IS NULL OR any(l IN labels(n) WHERE l IN $labels))
+        MATCH (d:Document)
+        WHERE 1=1
+        {date_filter_clause}
+        AND ($tiers IS NULL OR d.publisher_tier IN $tiers)
+        AND ($statuses IS NULL OR d.news_status IN $statuses)
+        
+        MATCH (d)-[r_mentions:MENTIONS]->(n)
+        WHERE ($sectors IS NULL OR (n:Sector AND n.id IN $sectors) OR EXISTS {{ MATCH (n)-[:BELONGS_TO]->(:Sector {{id: $sectors[0]}}) }}) -- Simplified sector check for now, ideally iterate
+        AND ($entity_search IS NULL OR toLower(COALESCE(n.name, n.id)) CONTAINS toLower($entity_search))
+        
+        WITH collect(DISTINCT n) as nodes
+        UNWIND nodes as n
+        MATCH (n)-[r]-(m)
+        WHERE m IN nodes
+        AND ($labels IS NULL OR any(l IN labels(n) WHERE l IN $labels))
         AND ($labels IS NULL OR any(l IN labels(m) WHERE l IN $labels))
         AND ($types IS NULL OR type(r) IN $types)
         RETURN n, r, m
-        LIMIT 200
+        LIMIT 500
         """
-        params = {"labels": node_types, "types": rel_types}
+        
+        # Note: The sector logic above is a bit simplified. 
+        # If $sectors is a list, we should check if n belongs to ANY of them.
+        # Correct Cypher for Sector filtering:
+        # AND ($sectors IS NULL OR (n:Sector AND n.id IN $sectors) OR EXISTS { MATCH (n)-[:BELONGS_TO]->(s:Sector) WHERE s.id IN $sectors })
+        
+        cypher_query = f"""
+        MATCH (d:Document)
+        WHERE 1=1
+        {date_filter_clause}
+        AND ($tiers IS NULL OR d.publisher_tier IN $tiers)
+        AND ($statuses IS NULL OR d.news_status IN $statuses)
+        
+        MATCH (d)-[:MENTIONS]->(n)
+        WHERE ($sectors IS NULL OR (n:Sector AND n.id IN $sectors) OR EXISTS {{ MATCH (n)-[:BELONGS_TO]->(s:Sector) WHERE s.id IN $sectors }})
+        AND ($entity_search IS NULL OR toLower(COALESCE(n.name, n.id)) CONTAINS toLower($entity_search))
+        
+        WITH collect(DISTINCT n) as nodes
+        UNWIND nodes as n
+        MATCH (n)-[r]-(m)
+        WHERE m IN nodes
+        AND ($labels IS NULL OR any(l IN labels(n) WHERE l IN $labels))
+        AND ($labels IS NULL OR any(l IN labels(m) WHERE l IN $labels))
+        AND ($types IS NULL OR type(r) IN $types)
+        RETURN n, r, m
+        LIMIT 500
+        """
 
     try:
         results = db.query(cypher_query, params)
@@ -142,14 +281,38 @@ async def get_network(
 
 @router.get("/analysis/companies")
 async def analyze_companies(article_titles: List[str] = Query(...)):
-    # 1. Companies mentioned
-    companies_query = """
-    MATCH (d:Document)-[:MENTIONS]->(c:Company)
-    WHERE d.title IN $titles
-    RETURN DISTINCT COALESCE(c.name, c.id) as Company, d.title as Article
-    ORDER BY Company
+    # 1. Sentiment Analysis (Companies, Products, Sectors)
+    sentiment_query = """
+    MATCH (d:Document)-[r:MENTIONS]->(n)
+    WHERE d.title IN $titles AND (n:Company OR n:Product OR n:Sector)
+    RETURN 
+        COALESCE(n.name, n.id) as Entity, 
+        labels(n)[0] as Type, 
+        r.sentiment as Sentiment, 
+        count(*) as Count
     """
-    companies_data = db.query(companies_query, {"titles": article_titles})
+    sentiment_raw = db.query(sentiment_query, {"titles": article_titles})
+    
+    # Process into structured data
+    entity_stats = {}
+    for row in sentiment_raw:
+        entity = row['Entity']
+        etype = row['Type']
+        sentiment = row['Sentiment'] or "Neutral"
+        count = row['Count']
+        
+        if entity not in entity_stats:
+            entity_stats[entity] = {"Entity": entity, "Type": etype, "Total": 0, "Positive": 0, "Negative": 0, "Neutral": 0}
+        
+        entity_stats[entity]["Total"] += count
+        if sentiment == "Positive":
+            entity_stats[entity]["Positive"] += count
+        elif sentiment == "Negative":
+            entity_stats[entity]["Negative"] += count
+        else:
+            entity_stats[entity]["Neutral"] += count
+            
+    sentiment_data = list(entity_stats.values())
     
     # 2. Connections
     connections_query = """
@@ -167,7 +330,7 @@ async def analyze_companies(article_titles: List[str] = Query(...)):
     connections_data = db.query(connections_query, {"titles": article_titles})
     
     return {
-        "companies": [dict(r) for r in companies_data],
+        "sentiment": sentiment_data,
         "connections": [dict(r) for r in connections_data]
     }
 
