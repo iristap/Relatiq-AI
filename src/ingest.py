@@ -112,7 +112,7 @@ sentiment_chain = sentiment_prompt | llm | sentiment_parser
 
 def get_publisher_tier(publisher: str) -> str:
     if not publisher:
-        return "Tier C"
+        return "C"
     
     publisher_lower = publisher.lower()
     
@@ -136,38 +136,48 @@ def get_publisher_tier(publisher: str) -> str:
             
     return "C"
 
-async def process_file(filepath):
-    print(f"Processing {filepath}...")
+async def extract_info(text: str, source: str = "Manual Input"):
+    print(f"Extracting info from {source}...")
+    results = {
+        "metadata": {},
+        "graph_documents": [],
+        "sentiment": [],
+        "source": source,
+        "text_snippet": text[:3000] # Save snippet for sentiment analysis if needed later
+    }
+    
     try:
-        with open(filepath, "r", encoding="utf-8") as file:
-            text = file.read()
-        
         # Extract Metadata using LLM
         try:
-            metadata = metadata_chain.invoke({"text": text}) # Send first 2000 chars for metadata to save tokens
+            metadata = metadata_chain.invoke({"text": text})
             title = metadata.title
-            source = metadata.source
+            source_pub = metadata.source
             url = metadata.url
             date_str = metadata.date
             news_status = metadata.status
             
             # Determine Publisher Tier
-            publisher_tier = get_publisher_tier(source)
+            publisher_tier = get_publisher_tier(source_pub)
             
-            print(f"Extracted Metadata: {title} | {source} ({publisher_tier}) | {date_str} | {url} | {news_status}")
+            print(f"Extracted Metadata: {title} | {source_pub} ({publisher_tier}) | {date_str} | {url} | {news_status}")
+            results["metadata"] = metadata.dict()
+            results["metadata"]["publisher_tier"] = publisher_tier
+            
         except Exception as e:
-            print(f"Metadata extraction failed for {filepath}: {e}")
+            print(f"Metadata extraction failed for {source}: {e}")
             title = "Unknown"
-            source = "Unknown"
+            source_pub = "Unknown"
             publisher_tier = "C"
             url = "Unknown"
             date_str = ""
             news_status = "Unknown"
+            results["metadata_error"] = str(e)
 
-        doc = Document(page_content=text, metadata={"source": filepath, "title": title, "date": date_str, "publisher": source, "publisher_tier": publisher_tier, "url": url, "news_status": news_status})
+        doc = Document(page_content=text, metadata={"source": source, "title": title, "date": date_str, "publisher": source_pub, "publisher_tier": publisher_tier, "url": url, "news_status": news_status})
         
         # Extract Graph Data
         graph_documents = await graph_transformer.aconvert_to_graph_documents([doc])
+        results["graph_documents"] = graph_documents
         
         # Inject Metadata into Relationships
         for graph_doc in graph_documents:
@@ -176,10 +186,6 @@ async def process_file(filepath):
                 relationship.properties["date"] = date_str
                 relationship.properties["publisher_tier"] = publisher_tier
                 relationship.properties["news_status"] = news_status
-        
-        # Add to Neo4j
-        graph.add_graph_documents(graph_documents, include_source=True)
-        print(f"Successfully processed {filepath}")
         
         # --- Sentiment Analysis ---
         # Identify relevant entities for sentiment analysis
@@ -196,27 +202,59 @@ async def process_file(filepath):
             print(f"Analyzing sentiment for: {relevant_entities}")
             try:
                 sentiment_result = sentiment_chain.invoke({"text": text[:3000], "entities": relevant_entities})
-                
-                for entity_sentiment in sentiment_result.sentiments:
-                    # Update the relationship in Neo4j
-                    # We assume the relationship is MENTIONS from the Document to the Entity
-                    # Note: The graph transformer creates MENTIONS relationships between Document and Nodes
-                    
-                    query = """
-                    MATCH (d:Document {source: $source})-[r:MENTIONS]->(n)
-                    WHERE n.id = $entity_id
-                    SET r.sentiment = $sentiment
-                    """
-                    
-                    graph.query(query, params={
-                        "source": filepath,
-                        "entity_id": entity_sentiment.entity_name,
-                        "sentiment": entity_sentiment.sentiment
-                    })
-                    print(f"Updated sentiment for {entity_sentiment.entity_name}: {entity_sentiment.sentiment}")
-                    
+                results["sentiment"] = sentiment_result.sentiments
             except Exception as e:
-                print(f"Sentiment analysis failed for {filepath}: {e}")
+                print(f"Sentiment analysis failed for {source}: {e}")
+                results["sentiment_error"] = str(e)
+        
+        return results
+
+    except Exception as e:
+        print(f"Error extracting info from {source}: {e}")
+        raise e
+
+async def save_to_neo4j(data: dict):
+    source = data.get("source", "Manual Input")
+    print(f"Saving data for {source} to Neo4j...")
+    
+    try:
+        # Add to Neo4j
+        if data.get("graph_documents"):
+            graph.add_graph_documents(data["graph_documents"], include_source=True)
+            print(f"Successfully added graph documents for {source}")
+        
+        # Update Sentiment
+        if data.get("sentiment"):
+            for entity_sentiment in data["sentiment"]:
+                query = """
+                MATCH (d:Document {source: $source})-[r:MENTIONS]->(n)
+                WHERE n.id = $entity_id
+                SET r.sentiment = $sentiment
+                """
+                
+                graph.query(query, params={
+                    "source": source,
+                    "entity_id": entity_sentiment.entity_name,
+                    "sentiment": entity_sentiment.sentiment
+                })
+                print(f"Updated sentiment for {entity_sentiment.entity_name}: {entity_sentiment.sentiment}")
+                
+    except Exception as e:
+        print(f"Error saving to Neo4j for {source}: {e}")
+        raise e
+
+async def process_text(text: str, source: str = "Manual Input"):
+    data = await extract_info(text, source)
+    await save_to_neo4j(data)
+    return data
+
+async def process_file(filepath):
+    print(f"Processing {filepath}...")
+    try:
+        with open(filepath, "r", encoding="utf-8") as file:
+            text = file.read()
+        
+        await process_text(text, source=filepath)
         
     except Exception as e:
         print(f"Error processing {filepath}: {e}")

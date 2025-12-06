@@ -106,6 +106,15 @@ To populate the graph with new data:
 python src/ingest.py
 ```
 
+### Manual Data Ingestion (Streamlit)
+
+For a user-friendly interface to ingest individual articles:
+
+```bash
+streamlit run src/streamlit_app.py
+```
+This will open a web interface where you can paste article text and see the extraction results in real-time.
+
 ## Project Structure
 
 ```
