@@ -252,7 +252,7 @@ export default function Home() {
         </div>
 
         {viewMode === 'selection' ? (
-          <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex-1 overflow-y-auto">
+          <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex-1 overflow-y-auto min-h-0">
             <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
               <Filter className="w-4 h-4" /> Filters
             </h2>
@@ -376,7 +376,7 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex-1 overflow-y-auto flex flex-col gap-6">
+          <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex-1 overflow-y-auto flex flex-col gap-6 min-h-0">
             <button
               onClick={() => setViewMode('selection')}
               className="w-full py-2 px-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors"
@@ -406,7 +406,7 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col bg-white dark:bg-slate-950 overflow-hidden">
         {viewMode === 'selection' ? (
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col min-h-0">
             <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between shadow-sm">
               <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <Newspaper className="w-5 h-5 text-indigo-600" />
@@ -551,7 +551,7 @@ export default function Home() {
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto p-6 min-h-0">
 
               {activeTab === 'graph' && (
                 <div className="h-full flex flex-col">
