@@ -60,6 +60,7 @@ class ArticleMetadata(BaseModel):
     source: Optional[str] = Field(description="The publisher or source of the news (e.g., Investing.com, Reuters).")
     url: Optional[str] = Field(description="The URL of the article.")
     date: Optional[str] = Field(description="The publication date in ISO format (YYYY-MM-DD). If not found, return null.")
+    status: Optional[Literal["Confirmed News", "Speculation"]] = Field(description="The status of the article. Options: Confirmed News, Speculation.")
 
 metadata_parser = PydanticOutputParser(pydantic_object=ArticleMetadata)
 
@@ -216,7 +217,7 @@ async def process_file(filepath):
         print(f"Error processing {filepath}: {e}")
 
 async def main():
-    files = glob.glob(r"data\batch3\*.txt")
+    files = glob.glob(r"data\batch1\*.txt")
     
     print(f"Found {len(files)} files.")
     
