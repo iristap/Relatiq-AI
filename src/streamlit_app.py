@@ -24,7 +24,7 @@ if "extraction_results" not in st.session_state:
 # Text Input
 article_text = st.text_area("News Article Content", height=300)
 
-if st.button("Analyze Article"):
+if st.button("Extract Article"):
     if not article_text:
         st.warning("Please enter some text.")
     else:
