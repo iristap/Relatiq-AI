@@ -435,28 +435,81 @@ async def agent_query(request: AgentQueryRequest):
 @router.post("/agent/insight")
 async def agent_insight(request: AgentInsightRequest):
     # 1. Fetch Article Content (or summaries)
-    # In a real app, we might fetch full text. Here we'll use titles and maybe some metadata.
-    # Or fetch from Neo4j if we stored text (we didn't store full text in Document nodes, just metadata).
-    # Let's assume we can get enough from titles and graph connections.
+    # We fetch full text (or snippets) from Document nodes and relationships.
     
     # Fetch graph context for these articles
+    # We need to collect article text explicitly if available, otherwise fallback to title
     context_query = """
-    MATCH (d:Document)-[r]->(n)
+    MATCH (d:Document)
     WHERE d.title IN $titles
-    RETURN d.title as Article, type(r) as Relation, COALESCE(n.name, n.id) as Entity, labels(n)[0] as Type
-    LIMIT 200
+    OPTIONAL MATCH (d)-[r]->(n)
+    RETURN d.title as Article, d.text as Text, type(r) as Relation, COALESCE(n.name, n.id) as Entity, labels(n)[0] as Type
+    LIMIT 500
     """
     context_data = db.query(context_query, {"titles": request.article_titles})
     
-    context_str = "\n".join([f"- Article '{r['Article']}' mentions {r['Type']} '{r['Entity']}' ({r['Relation']})" for r in context_data])
+    # Process data to separate Article Content and Relationships
+    articles_map = {}
+    relationships = []
     
+    for r in context_data:
+        # Article Content
+        title = r['Article']
+        text = r.get('Text') or f"Title: {title}" # Fallback if no text
+        if hasattr(text, 'strip') and len(text) > 500: # Truncate if too long to avoid token limits, though Gemini is generous
+             text = text[:1000] + "..."
+             
+        articles_map[title] = text
+        
+        # Relationship
+        if r['Relation'] and r['Entity']:
+             relationships.append(f"- Article '{title}' mentions {r['Type']} '{r['Entity']}' ({r['Relation']})")
+
+    article_context = "\n\n".join([f"Article: {t}\nContent:\n{c}" for t, c in articles_map.items()])
+    graph_context_query = """
+    MATCH (d:Document)-[:MENTIONS]->(n)
+    WHERE d.title IN $titles
+    WITH collect(DISTINCT n) as nodes
+    UNWIND nodes as n
+    MATCH (n)-[r]-(m)
+    WHERE m IN nodes
+    RETURN n, type(r) as relationship_type, m
+    """
+    graph_context_data = db.query(graph_context_query, {"titles": request.article_titles})
+
+    graph_relationships = []
+    for record in graph_context_data:
+        # print(record)
+        graph_relationships.append(f"- {record['n']} {record['relationship_type']} {record['m']}")
+
+    # Combine existing article content with the new graph relationships
+    article_context = "\n\n".join([f"Article: {t}\nContent:\n{c}" for t, c in articles_map.items()])
+    # if graph_relationships:
+    #     article_context += "\n\nRelevant Graph Relationships:\n" + "\n".join(graph_relationships)
+
+    graph_relationships = []
+    for record in graph_context_data:
+        node_n_name = record['n'].get('name', record['n'].get('id', 'Unknown'))
+        node_m_name = record['m'].get('name', record['m'].get('id', 'Unknown'))
+        relationship_type = record['relationship_type']
+        graph_relationships.append(f"- {node_n_name} {relationship_type} {node_m_name}")
+
+    relation_ship_node = "\n".join(graph_relationships)
+
+    print(article_context)
+    print("*"*100)
+    print(relation_ship_node)
     # Select Prompt based on Analysis Type
     if request.analysis_type == "Risks":
         template = """
         Task: Analyze the following financial news context and identify potential risks and challenges. Response in Thai using Markdown.
         
         Context:
-        {context}
+        news
+        {article_context}
+
+        relationship:
+        {relation_ship_node}
         
         Instructions:
         - Identify negative indicators, market risks, or operational challenges.
@@ -470,7 +523,11 @@ async def agent_insight(request: AgentInsightRequest):
         Task: Analyze the following financial news context and determine the strategic direction of the companies. Response in Thai using Markdown.
         
         Context:
-        {context}
+        news
+        {article_context}
+
+        relationship:
+        {relation_ship_node}
         
         Instructions:
         - Identify future plans, new products, or expansion strategies.
@@ -484,7 +541,11 @@ async def agent_insight(request: AgentInsightRequest):
         Task: Analyze the following financial news context and provide key insights and a summary. Response in Thai using Markdown.
         
         Context:
-        {context}
+        news
+        {article_context}
+
+        relationship:
+        {relation_ship_node}
         
         Instructions:
         - Identify major trends or events (e.g., big investments, new partnerships).
@@ -499,7 +560,7 @@ async def agent_insight(request: AgentInsightRequest):
     chain = prompt | llm | StrOutputParser()
     
     try:
-        insight = chain.invoke({"context": context_str})
+        insight = chain.invoke({"article_context": article_context, "relation_ship_node": relation_ship_node})
         return {"insight": insight}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
