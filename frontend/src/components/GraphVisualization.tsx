@@ -43,8 +43,31 @@ const GraphVisualization: React.FC<Props> = ({ data, darkMode, highlightedNodes 
         }
     }, [data, darkMode, highlightedNodes]);
 
+    // Legend Data
+    const NODE_COLORS = {
+        "Company": "#ef4444",
+        "Person": "#22c55e",
+        "Sector": "#f59e0b",
+        "Product": "#a855f7",
+        "Document": "#64748b",
+        "Other": "#3b82f6"
+    };
+
     return (
-        <div className="h-full w-full">
+        <div className="h-full w-full relative">
+            {/* Legend Overlay */}
+            <div className={`absolute top-4 left-4 p-4 rounded-lg shadow-lg z-10 border ${darkMode ? 'bg-slate-900/90 border-slate-700' : 'bg-white/90 border-slate-200'} backdrop-blur-sm`}>
+                <h3 className={`text-xs font-semibold uppercase tracking-wider mb-2 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>Legend</h3>
+                <div className="flex flex-col gap-2">
+                    {Object.entries(NODE_COLORS).map(([label, color]) => (
+                        <div key={label} className="flex items-center gap-2">
+                            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: color }}></span>
+                            <span className={`text-sm ${darkMode ? 'text-slate-200' : 'text-slate-700'}`}>{label}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
             <ForceGraph2D
                 ref={graphRef}
                 graphData={{

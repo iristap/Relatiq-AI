@@ -249,7 +249,15 @@ async def get_network(
             for n in record['nodes']:
                 if n.element_id not in node_ids:
                     label = list(n.labels)[0] if n.labels else "Unknown"
-                    color = "#ff0000" if label == "Company" else "#00ff00" if label == "Person" else "#0000ff"
+                    label = list(n.labels)[0] if n.labels else "Unknown"
+                    color_map = {
+                        "Company": "#ef4444",  # Red-500
+                        "Person": "#22c55e",   # Green-500
+                        "Sector": "#f59e0b",   # Amber-500
+                        "Product": "#a855f7",  # Purple-500
+                        "Document": "#64748b"  # Slate-500
+                    }
+                    color = color_map.get(label, "#3b82f6") # Blue-500 default
                     node_label = n.get("name", n.get("id", "Unknown"))
                     nodes.append(GraphNode(id=n.element_id, label=node_label, color=color))
                     node_ids.add(n.element_id)
@@ -262,14 +270,30 @@ async def get_network(
             
             if n and n.element_id not in node_ids:
                 label = list(n.labels)[0] if n.labels else "Unknown"
-                color = "#ff0000" if label == "Company" else "#00ff00" if label == "Person" else "#0000ff"
+                label = list(n.labels)[0] if n.labels else "Unknown"
+                color_map = {
+                    "Company": "#ef4444",
+                    "Person": "#22c55e",
+                    "Sector": "#f59e0b",
+                    "Product": "#a855f7",
+                    "Document": "#64748b"
+                }
+                color = color_map.get(label, "#3b82f6")
                 node_label = n.get("name", n.get("id", "Unknown"))
                 nodes.append(GraphNode(id=n.element_id, label=node_label, color=color))
                 node_ids.add(n.element_id)
             
             if m and m.element_id not in node_ids:
                 label = list(m.labels)[0] if m.labels else "Unknown"
-                color = "#ff0000" if label == "Company" else "#00ff00" if label == "Person" else "#0000ff"
+                label = list(m.labels)[0] if m.labels else "Unknown"
+                color_map = {
+                    "Company": "#ef4444",
+                    "Person": "#22c55e",
+                    "Sector": "#f59e0b",
+                    "Product": "#a855f7",
+                    "Document": "#64748b"
+                }
+                color = color_map.get(label, "#3b82f6")
                 node_label = m.get("name", m.get("id", "Unknown"))
                 nodes.append(GraphNode(id=m.element_id, label=node_label, color=color))
                 node_ids.add(m.element_id)
@@ -404,7 +428,15 @@ async def agent_query(request: AgentQueryRequest):
                     if hasattr(value, 'labels'): # Node
                         if value.element_id not in node_ids:
                             label = list(value.labels)[0] if value.labels else "Unknown"
-                            color = "#ff0000" if label == "Company" else "#00ff00" if label == "Person" else "#0000ff"
+                            label = list(value.labels)[0] if value.labels else "Unknown"
+                            color_map = {
+                                "Company": "#ef4444",
+                                "Person": "#22c55e",
+                                "Sector": "#f59e0b",
+                                "Product": "#a855f7",
+                                "Document": "#64748b"
+                            }
+                            color = color_map.get(label, "#3b82f6")
                             node_label = value.get("name", value.get("id", "Unknown"))
                             nodes.append(GraphNode(id=value.element_id, label=node_label, color=color))
                             node_ids.add(value.element_id)
@@ -416,7 +448,15 @@ async def agent_query(request: AgentQueryRequest):
                             if hasattr(item, 'labels'): # Node
                                 if item.element_id not in node_ids:
                                     label = list(item.labels)[0] if item.labels else "Unknown"
-                                    color = "#ff0000" if label == "Company" else "#00ff00" if label == "Person" else "#0000ff"
+                                    label = list(item.labels)[0] if item.labels else "Unknown"
+                                    color_map = {
+                                        "Company": "#ef4444",
+                                        "Person": "#22c55e",
+                                        "Sector": "#f59e0b",
+                                        "Product": "#a855f7",
+                                        "Document": "#64748b"
+                                    }
+                                    color = color_map.get(label, "#3b82f6")
                                     node_label = item.get("name", item.get("id", "Unknown"))
                                     nodes.append(GraphNode(id=item.element_id, label=node_label, color=color))
                                     node_ids.add(item.element_id)
