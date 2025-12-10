@@ -374,8 +374,8 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from src.config import GOOGLE_API_KEY
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=GOOGLE_API_KEY, temperature=0)
-
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite", google_api_key=GOOGLE_API_KEY, temperature=0)
+llm_t2g = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=GOOGLE_API_KEY, temperature=0)
 class AgentQueryRequest(BaseModel):
     query: str
 
@@ -401,12 +401,11 @@ async def agent_query(request: AgentQueryRequest):
     - Use COALESCE(n.name, n.id) for names.
     - If the user asks about "investments", look for INVESTS_IN relationships.
     - If the user asks about "partnerships", look for PARTNERS_WITH relationships.
-    
-    Question: {question}
+    Question: {question} กราฟ
     Cypher Query:
     """
     prompt = PromptTemplate.from_template(template)
-    chain = prompt | llm | StrOutputParser()
+    chain = prompt | llm_t2g | StrOutputParser()
     
     try:
         cypher = chain.invoke({"schema": schema, "question": request.query})
@@ -487,25 +486,13 @@ async def agent_insight(request: AgentInsightRequest):
     LIMIT 500
     """
     context_data = db.query(context_query, {"titles": request.article_titles})
+    article_context = "\n".join([
+        f"Article: {row['Text']}"
+        for row in context_data
+    ])
     
-    # Process data to separate Article Content and Relationships
-    articles_map = {}
-    relationships = []
-    
-    for r in context_data:
-        # Article Content
-        title = r['Article']
-        text = r.get('Text') or f"Title: {title}" # Fallback if no text
-        if hasattr(text, 'strip') and len(text) > 500: # Truncate if too long to avoid token limits, though Gemini is generous
-             text = text[:1000] + "..."
-             
-        articles_map[title] = text
-        
-        # Relationship
-        if r['Relation'] and r['Entity']:
-             relationships.append(f"- Article '{title}' mentions {r['Type']} '{r['Entity']}' ({r['Relation']})")
 
-    article_context = "\n\n".join([f"Article: {t}\nContent:\n{c}" for t, c in articles_map.items()])
+    print(article_context)
     graph_context_query = """
     MATCH (d:Document)-[:MENTIONS]->(n)
     WHERE d.title IN $titles
@@ -516,14 +503,8 @@ async def agent_insight(request: AgentInsightRequest):
     RETURN n, type(r) as relationship_type, m
     """
     graph_context_data = db.query(graph_context_query, {"titles": request.article_titles})
-
-    graph_relationships = []
-    for record in graph_context_data:
-        # print(record)
-        graph_relationships.append(f"- {record['n']} {record['relationship_type']} {record['m']}")
-
     # Combine existing article content with the new graph relationships
-    article_context = "\n\n".join([f"Article: {t}\nContent:\n{c}" for t, c in articles_map.items()])
+    # article_context = "\n\n".join([f"Content:\n{c}" for t, c in articles_map.items()])
     # if graph_relationships:
     #     article_context += "\n\nRelevant Graph Relationships:\n" + "\n".join(graph_relationships)
 
@@ -532,67 +513,96 @@ async def agent_insight(request: AgentInsightRequest):
         node_n_name = record['n'].get('name', record['n'].get('id', 'Unknown'))
         node_m_name = record['m'].get('name', record['m'].get('id', 'Unknown'))
         relationship_type = record['relationship_type']
-        graph_relationships.append(f"- {node_n_name} {relationship_type} {node_m_name}")
+        graph_relationships.append(f"{node_n_name} {relationship_type} {node_m_name},")
 
-    relation_ship_node = "\n".join(graph_relationships)
+    relation_ship_node = " ".join(graph_relationships)
 
     print(article_context)
     print("*"*100)
     print(relation_ship_node)
     # Select Prompt based on Analysis Type
+
+    # Relationship Nodes (Extracted entities, events, and their connections):
+    # {relation_ship_node}
+
+
     if request.analysis_type == "Risks":
         template = """
-        Task: Analyze the following financial news context and identify potential risks and challenges. Response in Thai using Markdown.
-        
-        Context:
-        news
-        {article_context}
+        Task: Analyze the financial news context and the extracted relationship nodes to identify and evaluate potential **Key Risks** associated with the situation.
 
-        relationship:
-        {relation_ship_node}
-        
-        Instructions:
-        - Identify negative indicators, market risks, or operational challenges.
-        - Highlight any legal issues or competitive threats.
-        - Format as a Markdown list with headers.
-        
-        Analysis (Risks):
+        Response Language: Primary Thai. All explanations and descriptive text must be in Thai. **However, all proper nouns and company names (e.g., Microsoft, Google, Nvidia, OpenAI) must be written in English.**
+        Response Format: Strict Markdown to list and detail the identified risks, followed by an explanation and citation (if available).
+
+        Context:
+        ---
+        News Article:
+        {article_context}
+        ---
+
+        Instructions for Risk Analysis:
+
+        1.  **Identify Key Risks:** Based on the news context in English, identify at least three major potential risks (e.g., Regulatory Scrutiny, Supply Chain Issues, Intensified Competition, Geopolitical Tension, Economic Downturn, Technology Failure).
+        2.  **Provide Detail:**
+            * State the risk in bold (e.g., **Regulatory Scrutiny**).
+            * Provide a brief **Thai explanation** of *why* this risk is relevant to the context.
+            * If the context explicitly mentions a source or impact related to the risk, include it in the explanation.
+        3.  **Output Structure:**
+            * Start the entire output with the heading: `## ⚠️ ความเสี่ยงที่ควรระวัง`
+            * Format each risk as a collapsible section or clearly separate entries using Markdown structure, prioritizing clarity and scannability similar to the example image.
+
+        Analysis (Summary):
         """
     elif request.analysis_type == "Direction":
         template = """
-        Task: Analyze the following financial news context and determine the strategic direction of the companies. Response in Thai using Markdown.
-        
-        Context:
-        news
-        {article_context}
+        Task: Analyze the financial news context to summarize the strategic position and key actions of the main companies/entities involved. The output must be structured as individual summaries for each entity.
 
-        relationship:
-        {relation_ship_node}
-        
-        Instructions:
-        - Identify future plans, new products, or expansion strategies.
-        - Analyze investment trends and partnerships.
-        - Format as a Markdown list with headers.
-        
-        Analysis (Company Direction):
+        Response Language: Primary Thai. All explanations and descriptive text must be in Thai. **However, all proper nouns and company names (e.g., Microsoft, Google, Nvidia, OpenAI) must be written in English.**
+        Response Format: Use Markdown to list each entity's strategic summary clearly.
+
+        Context:
+        ---
+        News Article:
+        {article_context}
+        ---
+
+        Instructions for Strategic Output:
+
+        1.  **Identify Key Entities:** Identify 3-4 major players (e.g., Microsoft, OpenAI, Nvidia, Google, AMD) from the context.
+        2.  **Entity Block:** For each entity, create a block with the following structure:
+            * **Header:** Start with the name in bold and use an appropriate icon (e.g., **Microsoft**).
+            * **Summary:** Provide a concise, high-level summarizing their strategic focus (e.g., "Aggressively expanding AI capabilities through strategic investments and partnerships.").
+            * **Key Actions:** Provide a bulleted list of 3-5 specific actions or capabilities derived from the news (e.g., Expanding Azure AI services, Integrating AI into Windows, Developing custom silicon).
+
+        Analysis (Strategic Summary):
         """
     else: # Default: Summary
-        template = """
-        Task: Analyze the following financial news context and provide key insights and a summary. Response in Thai using Markdown.
-        
-        Context:
-        news
-        {article_context}
+        template ="""
+        Task: Analyze the financial news context and the extracted relationship nodes to generate a comprehensive analysis. The response must strictly adhere to the specified Thai Markdown structure and focus on high-level strategy.
 
-        relationship:
-        {relation_ship_node}
-        
-        Instructions:
-        - Identify major trends or events (e.g., big investments, new partnerships).
-        - Highlight key companies and people involved.
-        - Provide a concise summary of the situation.
-        - Format with Markdown headers and bullet points.
-        
+        Response Language: Primary Thai. All explanations and descriptive text must be in Thai. **However, all proper nouns and company names (e.g., Microsoft, Google, Nvidia, OpenAI) must be written in English.**
+        Response Format: Strictly use the two required headers in Markdown (##) followed by synthesized content.
+
+        Context:
+        ---
+        News Article:
+        {article_context}
+        ---
+
+        Instructions for Output Generation:
+
+        1.  **Header 1 - ภาพรวมเชิงลึก (Insight Overview):**
+            * Start the entire analysis with this header: `## ภาพรวมเชิงลึก (Insight Overview)`
+            * Content should be a synthesis of the news and relationships, identifying major market **trends**, **implications**, and the overall competitive landscape or regulatory environment. (Must be a cohesive paragraph or multiple paragraphs, not bullet points).
+            * response briefly in 3-4 lines.
+
+        2.  **Header 2 - ทิศทางเชิงกลยุทธ์ของบริษัท:**
+            * Follow the first section immediately with this header: `## ทิศทางเชิงกลยุทธ์ของบริษัท`
+            * Identify the **key companies** involved.
+            * For each company, use **bullet points** (`*`) to clearly describe their **strategic moves, competitive position, investments, or challenges** as indicated by the context.
+            * response briefly in 1-2 lines.
+
+        3.  **Do not include any other introductory text, final remarks, or headers besides the two specified ones.**
+
         Analysis (Summary):
         """
 
