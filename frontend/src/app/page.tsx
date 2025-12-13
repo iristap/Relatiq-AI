@@ -9,6 +9,7 @@ import {
   agentQuery,
   agentInsight,
   getArticleMentions,
+  getArticleContent,
   Article,
   GraphData
 } from '@/lib/api';
@@ -65,10 +66,11 @@ export default function Home() {
   const [analysisData, setAnalysisData] = useState<any>(null);
   const [analysisLoading, setAnalysisLoading] = useState(false);
 
-  // Reading Mode State
   const [readingMode, setReadingMode] = useState(false);
   const [currentArticleIndex, setCurrentArticleIndex] = useState(0);
   const [highlightedNodes, setHighlightedNodes] = useState<string[]>([]);
+  const [articleContent, setArticleContent] = useState('');
+  const [contentLoading, setContentLoading] = useState(false);
 
   // Filters
   const [dateRange, setDateRange] = useState('30d');
@@ -218,12 +220,26 @@ export default function Home() {
     if (readingMode && selectedArticles.length > 0) {
       const title = selectedArticles[currentArticleIndex];
       if (title) {
+        // Fetch mentions for graph highlighting
         getArticleMentions(title).then(ids => {
           setHighlightedNodes(ids);
         }).catch(err => console.error("Failed to get mentions", err));
+
+        // Fetch full article content
+        setContentLoading(true);
+        setArticleContent(''); // Clear previous content immediately
+        getArticleContent(title).then(data => {
+          setArticleContent(data.text);
+        }).catch(err => {
+          console.error("Failed to get article content", err);
+          setArticleContent("Failed to load article content.");
+        }).finally(() => {
+          setContentLoading(false);
+        });
       }
     } else {
       setHighlightedNodes([]);
+      setArticleContent('');
     }
   }, [readingMode, currentArticleIndex, selectedArticles]);
 
@@ -555,8 +571,12 @@ export default function Home() {
 
               {activeTab === 'graph' && (
                 <div className="h-full flex flex-col">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">Network Visualization</h2>
+                  {/* Header */}
+                  <div className="flex justify-between items-center mb-4 px-1">
+                    <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                      Network Visualization
+                      {loading && <Loader2 className="w-4 h-4 animate-spin text-slate-400" />}
+                    </h2>
                     <div className="flex gap-2 items-center">
                       {selectedArticles.length > 0 && !readingMode && (
                         <button
@@ -567,55 +587,87 @@ export default function Home() {
                           Start Reading Mode
                         </button>
                       )}
-                      {loading && <span className="text-sm text-slate-500 flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Loading Graph...</span>}
                     </div>
                   </div>
-                  <div className="flex-1 min-h-0 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-1 relative">
-                    <GraphVisualization data={graphData} darkMode={darkMode} highlightedNodes={highlightedNodes} />
 
-                    {/* Reading Mode Overlay */}
+                  {/* Split View Container */}
+                  <div className="flex-1 min-h-0 flex flex-col gap-4 relative transition-all">
+
+                    {/* Graph Area - Resizes when Reading Mode is active */}
+                    <div className={clsx(
+                      "min-h-0 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-1 relative overflow-hidden transition-all duration-300 ease-in-out",
+                      readingMode ? "flex-[1.5]" : "flex-1"
+                    )}>
+                      <GraphVisualization data={graphData} darkMode={darkMode} highlightedNodes={highlightedNodes} />
+                    </div>
+
+                    {/* Reading Pane - Bottom Split */}
                     {readingMode && selectedArticles.length > 0 && (
-                      <div className="absolute bottom-6 left-6 right-6 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg p-6 flex flex-col animate-in slide-in-from-bottom-10">
-                        <div className="flex justify-between items-start mb-2">
+                      <div className="flex-1 flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 overflow-hidden animate-in slide-in-from-bottom-5 fade-in duration-300">
+                        {/* Reading Header */}
+                        <div className="flex justify-between items-center px-6 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-sm">
                           <div className="flex items-center gap-2 text-xs font-medium text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
                             <BookOpen className="w-3 h-3" />
-                            Article {currentArticleIndex + 1} of {selectedArticles.length}
+                            Reading {currentArticleIndex + 1} of {selectedArticles.length}
                           </div>
-                          <button
-                            onClick={() => {
-                              setReadingMode(false);
-                              setHighlightedNodes([]);
-                            }}
-                            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                          >
-                            <X className="w-5 h-5" />
-                          </button>
+
+                          <div className="flex items-center gap-2">
+                            <div className="text-[10px] text-slate-400">
+                              Mentions highlighted in graph
+                            </div>
+                            <div className="w-px h-3 bg-slate-300 dark:bg-slate-700 mx-1" />
+                            <button
+                              onClick={() => {
+                                setReadingMode(false);
+                                setHighlightedNodes([]);
+                              }}
+                              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+                              title="Close Reading Mode"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
 
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-                          {selectedArticles[currentArticleIndex]}
-                        </h3>
-
-                        <div className="flex items-center justify-between mt-4">
+                        {/* Article Title & Nav */}
+                        <div className="px-6 py-4 bg-white dark:bg-slate-950 border-b border-slate-50 dark:border-slate-900 flex justify-between items-start gap-4">
                           <button
                             onClick={handlePrevArticle}
                             disabled={currentArticleIndex === 0}
-                            className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed text-slate-600 dark:text-slate-400"
+                            className="mt-1 p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed text-slate-500"
                           >
-                            <ChevronLeft className="w-6 h-6" />
+                            <ChevronLeft className="w-5 h-5" />
                           </button>
 
-                          <div className="text-sm text-slate-500 dark:text-slate-400">
-                            Mentions highlighted in graph
-                          </div>
+                          <h3 className="flex-1 text-center text-lg font-bold text-slate-900 dark:text-slate-100 leading-snug">
+                            {selectedArticles[currentArticleIndex]}
+                          </h3>
 
                           <button
                             onClick={handleNextArticle}
                             disabled={currentArticleIndex === selectedArticles.length - 1}
-                            className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed text-slate-600 dark:text-slate-400"
+                            className="mt-1 p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed text-slate-500"
                           >
-                            <ChevronRight className="w-6 h-6" />
+                            <ChevronRight className="w-5 h-5" />
                           </button>
+                        </div>
+
+                        {/* Article Content */}
+                        <div className="flex-1 overflow-y-auto px-6 py-6 bg-white dark:bg-slate-950 custom-scrollbar">
+                          <div className="max-w-4xl mx-auto">
+                            {contentLoading ? (
+                              <div className="flex flex-col items-center justify-center p-12 text-slate-400 gap-3">
+                                <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+                                <span className="text-sm">Fetching article content...</span>
+                              </div>
+                            ) : (
+                              <div className="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                  {articleContent || "*No content available for this article.*"}
+                                </ReactMarkdown>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     )}

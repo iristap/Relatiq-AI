@@ -90,6 +90,11 @@ export const getArticleMentions = async (title: string) => {
   return response.data;
 };
 
+export const getArticleContent = async (title: string) => {
+  const response = await api.get<{ text: string }>('/article/content', { params: { title } });
+  return response.data;
+};
+
 export const agentQuery = async (query: string) => {
   const response = await api.post('/agent/query', { query });
   return response.data;

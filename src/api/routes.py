@@ -368,6 +368,18 @@ async def get_article_mentions(title: str):
     results = db.query(query, {"title": title})
     return [r['id'] for r in results]
 
+@router.get("/article/content")
+async def get_article_content(title: str):
+    query = """
+    MATCH (d:Document)
+    WHERE d.title = $title
+    RETURN d.text as text
+    """
+    results = db.query(query, {"title": title})
+    if results:
+        return {"text": results[0].get("text", "")}
+    raise HTTPException(status_code=404, detail="Article not found")
+
 # Agent Endpoints
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
