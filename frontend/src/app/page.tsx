@@ -432,6 +432,14 @@ export default function Home() {
                 <span className="text-sm text-slate-500 dark:text-slate-400">
                   {selectedArticles.length} selected
                 </span>
+                {selectedArticles.length > 0 && (
+                  <button
+                    onClick={() => setSelectedArticles([])}
+                    className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 underline"
+                  >
+                    Clear selection
+                  </button>
+                )}
                 <button
                   onClick={() => setViewMode('analysis')}
                   disabled={selectedArticles.length === 0}
@@ -570,7 +578,7 @@ export default function Home() {
             <div className="flex-1 overflow-y-auto p-6 min-h-0">
 
               {activeTab === 'graph' && (
-                <div className="h-full flex flex-col">
+                <div className={clsx("flex flex-col", readingMode ? "" : "h-full")}>
                   {/* Header */}
                   <div className="flex justify-between items-center mb-4 px-1">
                     <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
@@ -591,19 +599,22 @@ export default function Home() {
                   </div>
 
                   {/* Split View Container */}
-                  <div className="flex-1 min-h-0 flex flex-col gap-4 relative transition-all">
+                  <div className={clsx(
+                    "flex flex-col gap-4 relative transition-all",
+                    readingMode ? "" : "flex-1 min-h-0"
+                  )}>
 
                     {/* Graph Area - Resizes when Reading Mode is active */}
                     <div className={clsx(
-                      "min-h-0 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-1 relative overflow-hidden transition-all duration-300 ease-in-out",
-                      readingMode ? "flex-[1.5]" : "flex-1"
+                      "bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-1 relative overflow-hidden transition-all duration-300 ease-in-out",
+                      readingMode ? "h-[500px]" : "flex-1 min-h-0"
                     )}>
                       <GraphVisualization data={graphData} darkMode={darkMode} highlightedNodes={highlightedNodes} />
                     </div>
 
                     {/* Reading Pane - Bottom Split */}
                     {readingMode && selectedArticles.length > 0 && (
-                      <div className="flex-1 flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 overflow-hidden animate-in slide-in-from-bottom-5 fade-in duration-300">
+                      <div className="flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 overflow-hidden animate-in slide-in-from-bottom-5 fade-in duration-300">
                         {/* Reading Header */}
                         <div className="flex justify-between items-center px-6 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-sm">
                           <div className="flex items-center gap-2 text-xs font-medium text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
@@ -653,7 +664,7 @@ export default function Home() {
                         </div>
 
                         {/* Article Content */}
-                        <div className="flex-1 overflow-y-auto px-6 py-6 bg-white dark:bg-slate-950 custom-scrollbar">
+                        <div className="px-6 py-6 bg-white dark:bg-slate-950">
                           <div className="max-w-4xl mx-auto">
                             {contentLoading ? (
                               <div className="flex flex-col items-center justify-center p-12 text-slate-400 gap-3">
