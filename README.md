@@ -1,6 +1,15 @@
 # Financial News Knowledge Graph (Relatiq AI)
 
 Relatiq AI is a powerful tool designed to analyze financial news by constructing a Knowledge Graph. It leverages advanced AI and graph database technologies to extract entities, relationships, and insights from unstructured text, enabling users to visualize connections, track timelines, and perform deep analysis of companies and market trends.
+## Demo
+
+Watch our demo to see Relatiq AI v1.0:
+<div align="center">
+
+[![Watch the demo](https://img.youtube.com/vi/1JfPz9dxQdc/0.jpg)](https://youtu.be/1JfPz9dxQdc?si=2BE3rEBNOqOLh5M5)
+
+</div>
+
 
 ## Key Features
 
@@ -118,7 +127,7 @@ This will open a web interface where you can paste article text and see the extr
 ## Project Structure
 
 ```
-mind-ai/
+Relatiq-AI/
 ├── frontend/           # Next.js Frontend application
 ├── src/
 │   ├── api/            # FastAPI backend routes and logic
