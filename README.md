@@ -7,6 +7,7 @@ Watch our demo to see Relatiq AI v1.0:
 <div align="center">
 
 [![Watch the demo](https://img.youtube.com/vi/1JfPz9dxQdc/0.jpg)](https://youtu.be/1JfPz9dxQdc?si=2BE3rEBNOqOLh5M5)
+<br>
 link: https://youtu.be/1JfPz9dxQdc?si=2BE3rEBNOqOLh5M5
 </div>
 
