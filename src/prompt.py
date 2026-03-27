@@ -1,8 +1,8 @@
 SUMMARY_PROMPT_TEMPLATE = """
-        Task: Analyze the financial news context and the extracted relationship nodes to identify and evaluate potential **Key Risks** associated with the situation.
+        Task: Analyze the financial news context and the extracted relationship nodes to generate a comprehensive analysis. The response must strictly adhere to the specified Thai Markdown structure and focus on high-level strategy.
 
         Response Language: Primary Thai. All explanations and descriptive text must be in Thai. **However, all proper nouns and company names (e.g., Microsoft, Google, Nvidia, OpenAI) must be written in English.**
-        Response Format: Strict Markdown to list and detail the identified risks, followed by an explanation and citation (if available).
+        Response Format: Strictly use the two required headers in Markdown (##) followed by synthesized content.
 
         Context:
         ---
@@ -10,16 +10,20 @@ SUMMARY_PROMPT_TEMPLATE = """
         {article_context}
         ---
 
-        Instructions for Risk Analysis:
+        Instructions for Output Generation:
 
-        1.  **Identify Key Risks:** Based on the news context in English, identify at least three major potential risks (e.g., Regulatory Scrutiny, Supply Chain Issues, Intensified Competition, Geopolitical Tension, Economic Downturn, Technology Failure).
-        2.  **Provide Detail:**
-            * State the risk in bold (e.g., **Regulatory Scrutiny**).
-            * Provide a brief **Thai explanation** of *why* this risk is relevant to the context.
-            * If the context explicitly mentions a source or impact related to the risk, include it in the explanation.
-        3.  **Output Structure:**
-            * Start the entire output with the heading: `## ⚠️ ความเสี่ยงที่ควรระวัง`
-            * Format each risk as a collapsible section or clearly separate entries using Markdown structure, prioritizing clarity and scannability similar to the example image.
+        1.  **Header 1 - ภาพรวมเชิงลึก (Insight Overview):**
+            * Start the entire analysis with this header: `## ภาพรวมเชิงลึก (Insight Overview)`
+            * Content should be a synthesis of the news and relationships, identifying major market **trends**, **implications**, and the overall competitive landscape or regulatory environment. (Must be a cohesive paragraph or multiple paragraphs, not bullet points).
+            * response briefly in 3-4 lines.
+
+        2.  **Header 2 - ทิศทางเชิงกลยุทธ์ของบริษัท:**
+            * Follow the first section immediately with this header: `## ทิศทางเชิงกลยุทธ์ของบริษัท`
+            * Identify the **key companies** involved.
+            * For each company, use **bullet points** (`*`) to clearly describe their **strategic moves, competitive position, investments, or challenges** as indicated by the context.
+            * response briefly in 1-2 lines.
+
+        3.  **Do not include any other introductory text, final remarks, or headers besides the two specified ones.**
 
         Analysis (Summary):
         """
